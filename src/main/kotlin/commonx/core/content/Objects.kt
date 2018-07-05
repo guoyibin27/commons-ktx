@@ -15,14 +15,14 @@ var dozer = DozerBeanMapper()
 /**
  * 属性复制，使用方法
  */
-inline fun <reified T> Any.transferTo(): T {
+inline fun <reified T> Any.transfer(): T {
     return dozer.map(this, T::class.java)
 }
 
 /**
  * 集合内元素的属性复制
  */
-inline fun <reified T, E> Collection<E>.transferTo(): Collection<T> {
+inline fun <reified T, E> Collection<E>.transferEntries(): Collection<T> {
     return this.parallelStream().map { dozer.map<T>(it, T::class.java) }.toList()
 }
 
