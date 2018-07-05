@@ -22,7 +22,7 @@ inline fun <reified T> Any.transfer(): T {
 /**
  * 集合内元素的属性复制
  */
-inline fun <reified T, E> Collection<E>.transferEntries(): Collection<T> {
-    return this.parallelStream().map { dozer.map<T>(it, T::class.java) }.toList()
+inline fun <reified OUT, IN> List<IN>.transferEntries(): Collection<OUT> {
+    return this.parallelStream().map { dozer.map<OUT>(it, OUT::class.java) }.toList()
 }
 
