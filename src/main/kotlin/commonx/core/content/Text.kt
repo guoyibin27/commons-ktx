@@ -100,3 +100,21 @@ private fun bytes2Hex(bts: ByteArray): String {
     }
     return des
 }
+
+/**
+ * 转驼峰命名法
+ */
+fun String.toCamelCase(separator: Char = '_', firstCapital: Boolean = true): String {
+    val builder = StringBuilder()
+    var capitalFlag = firstCapital
+    for (c in this) {
+        when (c) {
+            separator -> capitalFlag = true
+            else -> {
+                builder.append(if (capitalFlag) Character.toUpperCase(c) else Character.toLowerCase(c))
+                capitalFlag = false
+            }
+        }
+    }
+    return builder.toString()
+}
