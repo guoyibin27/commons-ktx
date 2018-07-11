@@ -1,5 +1,10 @@
 package commonx.core.content
 
+import com.sun.org.apache.xpath.internal.operations.Bool
+import commonx.core.date.calculateAge
+import commonx.core.date.dateString
+import commonx.core.date.lastWeek
+import commonx.core.date.toDate
 import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -79,26 +84,40 @@ private fun encrypt(string: String?, type: String): String {
     return try {
         md5 = MessageDigest.getInstance(type)
         val bytes = md5.digest(string!!.toByteArray())
-        bytes2Hex(bytes)
+        bytes.toHex()
     } catch (e: NoSuchAlgorithmException) {
         ""
     }
 }
 
 /**
- * Extension method to convert byteArray to String.
+ * 字节数组转16进制字符串
  */
-private fun bytes2Hex(bts: ByteArray): String {
+fun ByteArray.toHex(): String {
     var des = ""
     var tmp: String
-    for (i in bts.indices) {
-        tmp = Integer.toHexString(bts[i].toInt() and 0xFF)
+    for (i in this.indices) {
+        tmp = Integer.toHexString(this[i].toInt() and 0xFF)
         if (tmp.length == 1) {
             des += "0"
         }
         des += tmp
     }
     return des
+}
+
+/**
+ * 字符串转16进制字符串
+ */
+fun String.toHex(): String {
+    return this.toByteArray().toHex()
+}
+
+/**
+ * 字符串转16进制字符串
+ */
+fun String.toHex(charset: Charset): String {
+    return this.toByteArray(charset).toHex()
 }
 
 /**
@@ -117,4 +136,38 @@ fun String.toCamelCase(separator: Char = '_', firstCapital: Boolean = true): Str
         }
     }
     return builder.toString()
+}
+
+/**
+ * 字符串转StringBuilder
+ */
+fun String.stringBuilder(): StringBuilder {
+    return StringBuilder(this)
+}
+
+/**
+ * 字符串转StringBuffer
+ */
+fun String.stringBuffer(): StringBuffer {
+    return StringBuffer(this)
+}
+
+/**
+ * 默认字符串，如果string为null时，返回给定的默认字符串
+ *
+ * @param defaultStr  默认字符串，默认为""
+ * @return
+ */
+fun String?.defaultString(defaultStr: String = ""): String {
+    if (this.isNullOrEmpty())
+        return defaultStr
+    else
+        return this!!
+}
+
+fun main(args: Array<String>) {
+    val s: String? = null
+    val ss = "haha"
+    println(s.defaultString("aaa"))
+    println(ss.defaultString("aaabb"))
 }

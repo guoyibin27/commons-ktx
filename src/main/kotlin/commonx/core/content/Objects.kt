@@ -25,4 +25,3 @@ inline fun <reified T> Any.transfer(): T {
 inline fun <reified OUT, IN> List<IN>.transferEntries(): Collection<OUT> {
     return this.parallelStream().map { dozer.map<OUT>(it, OUT::class.java) }.toList()
 }
-
