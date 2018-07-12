@@ -9,3 +9,7 @@ package commonx.core.content
 fun Int.toChinese(): String {
     return ""
 }
+
+fun Int.calculatePages(pageSize: Int): Int {
+    return this.minus(1).div(pageSize).plus(1)
+}

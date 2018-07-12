@@ -1,10 +1,5 @@
 package commonx.core.content
 
-import com.sun.org.apache.xpath.internal.operations.Bool
-import commonx.core.date.calculateAge
-import commonx.core.date.dateString
-import commonx.core.date.lastWeek
-import commonx.core.date.toDate
 import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -124,32 +119,76 @@ fun String.toHex(charset: Charset): String {
  * 转驼峰命名法
  */
 fun String.toCamelCase(separator: Char = '_', firstCapital: Boolean = true): String {
-    val builder = StringBuilder()
+    val builder = this.stringBuffer(false)
     var capitalFlag = firstCapital
     for (c in this) {
-        when (c) {
-            separator -> capitalFlag = true
-            else -> {
-                builder.append(if (capitalFlag) Character.toUpperCase(c) else Character.toLowerCase(c))
-                capitalFlag = false
-            }
+        capitalFlag = if (c == separator) {
+            true
+        } else {
+            builder.append(if (capitalFlag) Character.toUpperCase(c) else Character.toLowerCase(c))
+            false
         }
     }
     return builder.toString()
 }
 
 /**
+ * 将驼峰式命名的字符串转换为使用符号连接方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。<br></br>
+ *
+ * @param separator 连接符 默认为 "_"
+ * @return 转换后符号连接方式命名的字符串
+ */
+fun String.toUnderlineCase(separator: Char = '_'): String {
+    val sb = this.stringBuilder(false)
+    var c: Char
+    for (i in 0 until length) {
+        c = this[i]
+        val preChar = if (i > 0) this[i - 1] else null
+        if (Character.isUpperCase(c)) {
+            //遇到大写字母处理
+            val nextChar = if (i < length - 1) this[i + 1] else null
+            if (null != preChar && Character.isUpperCase(preChar)) {
+                //前一个字符为大写，则按照一个词对待
+                sb.append(c)
+            } else if (null != nextChar && Character.isUpperCase(nextChar)) {
+                //后一个为大写字母，按照一个词对待
+                if (null != preChar && separator != preChar) {
+                    //前一个是非大写时按照新词对待，加连接符
+                    sb.append(separator)
+                }
+                sb.append(c)
+            } else {
+                //前后都为非大写按照新词对待
+                if (null != preChar && separator != preChar) {
+                    //前一个非连接符，补充连接符
+                    sb.append(separator)
+                }
+                sb.append(Character.toLowerCase(c))
+            }
+        } else {
+            if (sb.length > 0 && Character.isUpperCase(sb[sb.length - 1]) && separator != c) {
+                //当结果中前一个字母为大写，当前为小写，说明此字符为新词开始（连接符也表示新词）
+                sb.append(separator)
+            }
+            //小写或符号
+            sb.append(c)
+        }
+    }
+    return sb.toString()
+}
+
+/**
  * 字符串转StringBuilder
  */
-fun String.stringBuilder(): StringBuilder {
-    return StringBuilder(this)
+fun String.stringBuilder(includeSelf: Boolean = true): StringBuilder {
+    return if (includeSelf) StringBuilder(this) else StringBuilder()
 }
 
 /**
  * 字符串转StringBuffer
  */
-fun String.stringBuffer(): StringBuffer {
-    return StringBuffer(this)
+fun String.stringBuffer(includeSelf: Boolean): StringBuffer {
+    return if (includeSelf) StringBuffer(this) else StringBuffer()
 }
 
 /**
@@ -165,9 +204,106 @@ fun String?.defaultString(defaultStr: String = ""): String {
         return this!!
 }
 
+/**
+ * 指定长度截取字符串，并追加占位符
+ * @param maxLength 最大长度
+ * @param placeholder 占位符
+ * @return 如果最大长度大于字符串长度本身，则返回字符串,否则返回截取的字符串+placeholder
+ */
+fun String.substringAfter(maxLength: Int, placeholder: String = "..."): String {
+    if (length <= maxLength) {
+        return this
+    } else {
+        return this.substring(0, maxLength) + placeholder
+    }
+}
+
+/**
+ * 自动填充字符串头
+ * @param placeholder 填充占位符
+ * @param totalLength 填充后的字符串总长度
+ * @return 填充后的字符串
+ */
+fun String.placeholderPre(placeholder: String = "", totalLength: Int): String {
+    if (length >= totalLength) {
+        return this
+    }
+    return placeholder.repeat(totalLength - length).plus(this)
+}
+
+/**
+ * 自动填充字符串尾
+ * @param placeholder 填充占位符
+ * @param totalLength 填充后的字符串总长度
+ * @return 填充后的字符串
+ */
+fun String.placeholderEnd(placeholder: String = "", totalLength: Int): String {
+    if (length >= totalLength) {
+        return this
+    }
+    return this.plus(placeholder.repeat(totalLength - length))
+}
+
+/**
+ * 统计指定内容中包含指定字符串的数量<br>
+ *
+ * @param countItem 被查找的字符串
+ * @return 查找到的个数 参数为 `null` 或者 ""时, 返回 `0`.
+ */
+fun String?.containsCount(countItem: String?): Int {
+    if (this.isNullOrEmpty()) {
+        return 0
+    }
+
+    if (countItem.isNullOrEmpty()) {
+        return 0
+    }
+
+    var count = 0
+    var idx = 0
+    while (true) {
+        idx = this!!.indexOf(countItem!!, idx)
+        if (idx > -1) {
+            count++
+            idx += countItem.length
+        } else {
+            break
+        }
+    }
+    return count
+}
+
+/**
+ * 将字符串切分为N等份
+ *
+ * @param partLen 每等份的长度
+ * @return 切分后的数组
+ */
+fun String?.cut(partLen: Int): Array<String> {
+    if (this.isNullOrEmpty()) {
+        return arrayOf()
+    }
+
+    if (this!!.length < partLen) {
+        return arrayOf()
+    }
+
+    val totalParts = this.length.calculatePages(partLen)
+    val result = Array<String>(totalParts) { "" }
+    for (i in 0 until totalParts) {
+        result[i] = this.substring(i * partLen, if (i == totalParts.minus(1)) length else partLen.plus(i.times(partLen)))
+    }
+    return result
+}
+
 fun main(args: Array<String>) {
     val s: String? = null
-    val ss = "haha"
-    println(s.defaultString("aaa"))
-    println(ss.defaultString("aaabb"))
+    val ss = "call_my_NAme"
+
+    val testContainsCount = "helloworldthis is a world dsajf dsa jfl "
+
+    println(testContainsCount.cut(10))
+//    println(testContainsCount.slice(IntRange(1, 10)))
+//    println(s.defaultString("aaa"))
+//    println(ss.defaultString("aaabb"))
 }
