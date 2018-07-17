@@ -211,10 +211,10 @@ fun String?.defaultString(defaultStr: String = ""): String {
  * @return 如果最大长度大于字符串长度本身，则返回字符串,否则返回截取的字符串+placeholder
  */
 fun String.substringAfter(maxLength: Int, placeholder: String = "..."): String {
-    if (length <= maxLength) {
-        return this
+    return if (length <= maxLength) {
+        this
     } else {
-        return this.substring(0, maxLength) + placeholder
+        this.substring(0, maxLength) + placeholder
     }
 }
 

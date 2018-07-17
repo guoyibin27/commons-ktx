@@ -1,7 +1,7 @@
 buildscript {
 
     ext {
-        kotlin_version = '1.2.41'
+        kotlin_version = '1.2.50'
         dozer_version = '5.5.1'
         fastjson_version = '1.2.31'
     }
@@ -45,6 +45,8 @@ dependencies {
 
     compile "net.sf.dozer:dozer:$dozer_version"
     compile "com.alibaba:fastjson:$fastjson_version"
+
+    compile 'cn.hutool:hutool-all:4.1.0'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
