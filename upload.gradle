@@ -9,7 +9,7 @@ uploadArchives {
 //            }
 
             //product maven repository
-            repository(url: "http://47.104.252.113:8081/repository/components-snapshot/") {
+            repository(url: "http://maven.botong.tech/repository/components-snapshot/") {
                 authentication(userName: "admin", password: "admin123")
             }
 //            repository(url: "http://180.104.112.249:8081/repository/components-snapshot/") {
