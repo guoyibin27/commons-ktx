@@ -172,6 +172,6 @@ fun Int.multiple(m: Int): Int {
 }
 
 fun main(args: Array<String>) {
-    val a = 1234564435
+    val a = 120000000
     println(a.toChinese())
 }

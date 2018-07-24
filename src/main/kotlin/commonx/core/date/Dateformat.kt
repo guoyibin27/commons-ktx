@@ -287,6 +287,21 @@ fun Date.hour(is24Clock: Boolean): Int {
 }
 
 /**
+ * 获取本周第一天的日期
+ * @param isMondayAsFirstDayOfWeek 第一天是否是周一，默认第一天为周一
+ */
+fun Date.beginOfWeek(isMondayAsFirstDayOfWeek: Boolean = true): Date {
+    val calendar = this.calendar(isMondayAsFirstDayOfWeek)
+    if (isMondayAsFirstDayOfWeek) {
+        // 设置周一为一周开始
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+    } else {
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
+    }
+    return calendar.time
+}
+
+/**
  * 获取周的最后一天的日期
  *
  * @param isMondayAsFirstDayOfWeek 第一天是否是周一，默认为周一为一周的开始
@@ -300,6 +315,10 @@ fun Date.endOfWeek(isMondayAsFirstDayOfWeek: Boolean = true): Date {
         cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY)
     }
     return cal.time
+}
+
+fun Date.beginOfMonth(): Date {
+    return calendar().apply { set(Calendar.DAY_OF_MONTH, 1) }.time
 }
 
 /**
@@ -447,3 +466,10 @@ fun Date.calculateAge(date: Date = now()): Int {
     return age
 }
 
+fun main(args: Array<String>) {
+    val now = Date()
+    println(now.beginOfWeek().dateString())
+    println(now.endOfWeek().dateString())
+    println(now.beginOfMonth().dateString())
+    println(now.endOfMonth().dateString())
+}

@@ -102,6 +102,7 @@ fun main(args: Array<String>) {
     val test = Test("test1", 20)
 
     val testjson = test.toJSONString()
+    val parseObject = JSON.parseObject(testjson, Test::class.java)
 
     println(test.jsonPath<Int>("$.age"))
     println(test.jsonPath<String>("$.name"))
@@ -110,4 +111,4 @@ fun main(args: Array<String>) {
     println(testjson.jsonPath<String>("$.name"))
 }
 
-data class Test(val name: String, val age: Int)
+class Test(var name: String? = null, var age: Int = 0)
