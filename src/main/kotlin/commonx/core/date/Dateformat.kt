@@ -202,8 +202,16 @@ fun Long.hour(is24Clock: Boolean): Int {
  *
  * @return 天
  */
-fun Date.dayOfWeek(): Int {
-    return this.calendar().get(Calendar.DAY_OF_WEEK)
+fun Date.dayOfWeek(isMondayAsFirstDayOfWeek: Boolean = true): Int {
+    val calendar = this.calendar(isMondayAsFirstDayOfWeek)
+    var dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+    if (isMondayAsFirstDayOfWeek) {
+        dayOfWeek = dayOfWeek.minus(1)
+        if (dayOfWeek == 0) {
+            dayOfWeek = 7
+        }
+    }
+    return dayOfWeek
 }
 
 /**
@@ -468,8 +476,6 @@ fun Date.calculateAge(date: Date = now()): Int {
 
 fun main(args: Array<String>) {
     val now = Date()
-    println(now.beginOfWeek().dateString())
-    println(now.endOfWeek().dateString())
-    println(now.beginOfMonth().dateString())
-    println(now.endOfMonth().dateString())
+    println(now.beginOfWeek().dayOfWeek())
+    println(now.endOfWeek().dayOfWeek())
 }
