@@ -161,28 +161,32 @@ fun Date.isBirthday(): Boolean {
     val cal = calendar()
     // 验证年
     val thisYear = cal.get(DateField.YEAR.value)
-    if (year < 1930 || year > thisYear) {
+    if (year() < 1930 || year() > thisYear) {
         return false;
     }
 
     // 验证月
-    if (month < 1 || month > 12) {
+    if (month() < 1 || month() > 12) {
         return false;
     }
 
     // 验证日
-    if (day < 1 || day > 31) {
+    if (dayOfMonth() < 1 || dayOfMonth() > 31) {
         return false;
     }
-    if ((month == 4 || month == 6 || month == 9 || month == 11) && day == 31) {
+    if ((month() == 4 || month() == 6 || month() == 9 || month() == 11) && dayOfMonth() == 31) {
         return false;
     }
-    if (month == 2) {
-        if (day > 29 || (day == 29 && !isLeapYear())) {
+    if (month() == 2) {
+        if (dayOfMonth() > 29 || (dayOfMonth() == 29 && !isLeapYear())) {
             return false;
         }
     }
     return true;
+}
+
+fun String.isBirthday(): Boolean {
+    return this.toDateIf()?.isBirthday() ?: false
 }
 
 /**
@@ -562,7 +566,6 @@ fun Date.nextMonth(): Date {
  * 根据出生年月日计算年龄
  *
  * @param 日期 默认为今天
- * @param 出生年月日
  * @return 年龄
  */
 fun Date.calculateAge(date: Date = now()): Int {
@@ -571,7 +574,7 @@ fun Date.calculateAge(date: Date = now()): Int {
         return 0
     }
 
-    var age = date.year - this.year
+    var age = date.year() - this.year()
 
     //如果出生月和给定日期的月份相同,则判断日期
     if (date.month() == this.month()) {
@@ -582,4 +585,34 @@ fun Date.calculateAge(date: Date = now()): Int {
         age--
     }
     return age
+}
+
+/**
+ * 根据出生年月日计算年龄
+ *
+ * @param 日期 默认为今天
+ * @return 年龄
+ */
+fun String.calculateAge(date: Date = Date()): Int {
+    return this.toDateIf()?.calculateAge(date) ?: 0
+}
+
+/**
+ * 根据出生年月日计算年龄
+ *
+ * @param 日期 默认为今天
+ * @return 年龄
+ */
+fun String.calculateAge(date: String): Int {
+    return this.toDateIf()?.calculateAge(date.toDateIf() ?: Date()) ?: 0
+}
+
+
+fun main(args: Array<String>) {
+    val date = "1039-11-11"
+    println(date.toDateIf()!!.calculateAge())
+    println(date.calculateAge())
+    println(date.calculateAge("1900-01-01"))
+    println(date.calculateAge("1900-01-01".toDateIf()!!))
+//    println(date.)
 }
