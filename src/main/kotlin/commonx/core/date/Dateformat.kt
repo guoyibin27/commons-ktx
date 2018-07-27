@@ -193,7 +193,7 @@ fun String.isBirthday(): Boolean {
  * 是否是闰年
  */
 fun Date.isLeapYear(): Boolean {
-    return GregorianCalendar().isLeapYear(year);
+    return GregorianCalendar().isLeapYear(year());
 }
 
 /**
