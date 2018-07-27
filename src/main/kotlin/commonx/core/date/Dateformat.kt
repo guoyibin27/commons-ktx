@@ -47,7 +47,7 @@ fun String.toDate(pattern: DateFormatPattern): Date {
  * 字符串转日期类型,自动判断传入的日期类型,如果类型无法解析，则返回null
  * @return Date 日期或者null
  */
-fun String.toDate(): Date? {
+fun String.toDateIf(): Date? {
     val pattern = getDateFormatPattern() ?: return null
     return toDate(pattern)
 }
