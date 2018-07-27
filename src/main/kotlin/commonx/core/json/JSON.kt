@@ -101,14 +101,12 @@ fun Any.containsJsonPath(path: String): Boolean {
 fun main(args: Array<String>) {
     val test = Test("test1", 20)
 
-    val testjson = test.toJSONString()
-    val parseObject = JSON.parseObject(testjson, Test::class.java)
-
+//    val parseObject = JSON.parseObject(testjson, Test::class.java)
     println(test.jsonPath<Int>("$.age"))
     println(test.jsonPath<String>("$.name"))
-
-    println(testjson.jsonPath<Int>("$.age"))
-    println(testjson.jsonPath<String>("$.name"))
+//
+//    println(testjson.jsonPath<Int>("$.age"))
+//    println(testjson.jsonPath<String>("$.name"))
 }
 
 class Test(var name: String? = null, var age: Int = 0)

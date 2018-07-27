@@ -295,15 +295,3 @@ fun String?.cut(partLen: Int): Array<String> {
     }
     return result
 }
-
-fun main(args: Array<String>) {
-    val s: String? = null
-    val ss = "call_my_NAme"
-
-    val testContainsCount = "helloworldthis is a world dsajf dsa jfl "
-
-    println(testContainsCount.cut(10))
-//    println(testContainsCount.slice(IntRange(1, 10)))
-//    println(s.defaultString("aaa"))
-//    println(ss.defaultString("aaabb"))
-}

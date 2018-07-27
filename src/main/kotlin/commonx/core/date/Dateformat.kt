@@ -1,6 +1,7 @@
 package commonx.core.date
 
 import cn.hutool.core.date.DateField
+import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,12 +35,121 @@ fun String.toDate(pattern: String = "yyyy-MM-dd HH:mm:ss"): Date {
 }
 
 /**
+ * 字符串转日期类型
+ * @param pattern {@link DateFormatPattern}
+ * @return Date 日期
+ */
+fun String.toDate(pattern: DateFormatPattern): Date {
+    return toDate(pattern.pattern)
+}
+
+/**
+ * 字符串转日期类型,自动判断传入的日期类型,如果类型无法解析，则返回null
+ * @return Date 日期或者null
+ */
+fun String.toDate(): Date? {
+    val pattern = getDateFormatPattern() ?: return null
+    return toDate(pattern)
+}
+
+/**
  * 日期转字符串
  */
 fun Date.dateString(pattern: String = "yyyy-MM-dd HH:mm:ss"): String {
     val dateFormat = SimpleDateFormat()
     dateFormat.applyPattern(pattern)
     return dateFormat.format(this)
+}
+
+/**
+ * 获取日期字符串的日期风格。失敗返回null。
+ *
+ * @param date 日期字符串
+ * @return 日期风格
+ */
+fun String.getDateFormatPattern(): DateFormatPattern? {
+    val map = HashMap<Long, DateFormatPattern>()
+    val timestamps = ArrayList<Long>()
+    for (p in DateFormatPattern.values()) {
+        var dateTmp: Date? = null
+        try {
+            val pos = ParsePosition(0)
+            val dateFormat = SimpleDateFormat(p.pattern, Locale.US)
+            dateFormat.isLenient = false
+            dateTmp = dateFormat.parse(this, pos)
+            if (pos.index != length) {
+                dateTmp = null
+            }
+        } catch (e: Exception) {
+        }
+        if (dateTmp != null) {
+            timestamps.add(dateTmp.time)
+            map[dateTmp.time] = p
+        }
+    }
+    val accurateDate = getAccurateDate(timestamps)
+    if (accurateDate != null) {
+        return map[accurateDate.time]
+    }
+    return null
+}
+
+/**
+ * 获取精确的日期
+ *
+ * @param timestamps 时间long集合
+ * @return 日期
+ */
+private fun getAccurateDate(timestamps: List<Long>?): Date? {
+    var date: Date? = null
+    var timestamp: Long = 0
+    val map = HashMap<Long, LongArray>()
+    val absoluteValues = ArrayList<Long>()
+
+    if (timestamps != null && timestamps.size > 0) {
+        if (timestamps.size > 1) {
+            for (i in timestamps.indices) {
+                for (j in i + 1 until timestamps.size) {
+                    val absoluteValue = Math.abs(timestamps[i] - timestamps[j])
+                    absoluteValues.add(absoluteValue)
+                    val timestampTmp = longArrayOf(timestamps[i], timestamps[j])
+                    map[absoluteValue] = timestampTmp
+                }
+            }
+
+            // 有可能有相等的情况。如2012-11和2012-11-01。时间戳是相等的。此时minAbsoluteValue为0
+            // 因此不能将minAbsoluteValue取默认值0
+            var minAbsoluteValue: Long = -1
+            if (!absoluteValues.isEmpty()) {
+                minAbsoluteValue = absoluteValues[0]
+                for (i in 1 until absoluteValues.size) {
+                    if (minAbsoluteValue > absoluteValues[i]) {
+                        minAbsoluteValue = absoluteValues[i]
+                    }
+                }
+            }
+
+            if (minAbsoluteValue != -1L) {
+                val timestampsLastTmp = map[minAbsoluteValue]
+
+                val dateOne = timestampsLastTmp!![0]
+                val dateTwo = timestampsLastTmp[1]
+                if (absoluteValues.size > 1) {
+                    timestamp = if (Math.abs(dateOne) > Math.abs(dateTwo))
+                        dateOne
+                    else
+                        dateTwo
+                }
+            }
+        } else {
+            timestamp = timestamps[0]
+        }
+    }
+
+    if (timestamp != 0L) {
+        date = Date(timestamp)
+    }
+    return date
 }
 
 /**
@@ -472,10 +582,4 @@ fun Date.calculateAge(date: Date = now()): Int {
         age--
     }
     return age
-}
-
-fun main(args: Array<String>) {
-    val now = Date()
-    println(now.beginOfWeek().dayOfWeek())
-    println(now.endOfWeek().dayOfWeek())
 }
