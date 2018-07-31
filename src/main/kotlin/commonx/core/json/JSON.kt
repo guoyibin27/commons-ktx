@@ -2,6 +2,7 @@ package commonx.core.json
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONPath
+import com.alibaba.fastjson.TypeReference
 import commonx.core.content.assertNull
 
 /**
@@ -15,7 +16,10 @@ import commonx.core.content.assertNull
  * String 转 Json
  * @return
  */
-inline fun <reified T> String.toJSONObject(): T = JSON.parseObject(this, T::class.java)
+inline fun <reified T> String.toJSONObject(): T {
+    val typeReference = object : TypeReference<T>() {}.type
+    return JSON.parseObject(this, typeReference)
+}
 
 /**
  * Object 转 Json string
@@ -101,12 +105,15 @@ fun Any.containsJsonPath(path: String): Boolean {
 fun main(args: Array<String>) {
     val test = Test("test1", 20)
 
-//    val parseObject = JSON.parseObject(testjson, Test::class.java)
-    println(test.jsonPath<Int>("$.age"))
-    println(test.jsonPath<String>("$.name"))
-//
-//    println(testjson.jsonPath<Int>("$.age"))
-//    println(testjson.jsonPath<String>("$.name"))
+    val list = mutableListOf<Test>(Test("test1", 20), Test("test2", 21), Test("test3", 22), Test("test4", 23))
+    println(list.toJSONString())
+    val aa = list.toJSONString().toJSONObject<MutableList<Test>>()
+    val str = "[{\"age\":20,\"name\":\"test1\"},{\"age\":21,\"name\":\"test2\"},{\"age\":22,\"name\":\"test3\"},{\"age\":23,\"name\":\"test4\"}]"
+    val a = str.toJSONObject<MutableList<Test>>()
+    val testjson = test.toJSONString()
+    println(testjson)
+    val te = testjson.toJSONObject<Test>()
+    println(te)
 }
 
 class Test(var name: String? = null, var age: Int = 0)
