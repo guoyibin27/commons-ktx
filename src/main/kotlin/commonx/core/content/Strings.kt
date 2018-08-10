@@ -295,3 +295,8 @@ fun String?.cut(partLen: Int): Array<String> {
     }
     return result
 }
+
+fun main(args: Array<String>) {
+    val s = "sss"
+
+}

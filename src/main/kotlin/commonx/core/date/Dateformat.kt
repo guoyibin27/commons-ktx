@@ -158,15 +158,15 @@ private fun getAccurateDate(timestamps: List<Long>?): Date? {
  * @return 是否为生日
  */
 fun Date.isBirthday(): Boolean {
-    val cal = calendar()
+    val cal = Calendar.getInstance()
     // 验证年
     val thisYear = cal.get(DateField.YEAR.value)
     if (year() < 1930 || year() > thisYear) {
         return false;
     }
 
-    // 验证月
-    if (month() < 1 || month() > 12) {
+    // 验证月,month()从0开始，0-11 标示1-12月
+    if (month() < 0 || month() > 11) {
         return false;
     }
 
@@ -609,10 +609,13 @@ fun String.calculateAge(date: String): Int {
 
 
 fun main(args: Array<String>) {
-    val date = "1039-11-11"
-    println(date.toDateIf()!!.calculateAge())
-    println(date.calculateAge())
-    println(date.calculateAge("1900-01-01"))
-    println(date.calculateAge("1900-01-01".toDateIf()!!))
+//    val date = "1039-11-11"
+//    println(date.toDateIf()!!.calculateAge())
+//    println(date.calculateAge())
+//    println(date.calculateAge("1900-01-01"))
+//    println(date.calculateAge("1900-01-01".toDateIf()!!))
 //    println(date.)
+    val t = "1988-01-01"
+    println(t.isBirthday())
+
 }
