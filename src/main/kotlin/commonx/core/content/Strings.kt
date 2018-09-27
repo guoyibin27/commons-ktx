@@ -1,5 +1,6 @@
 package commonx.core.content
 
+import cn.hutool.core.text.StrBuilder
 import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -296,7 +297,55 @@ fun String?.cut(partLen: Int): Array<String> {
     return result
 }
 
-fun main(args: Array<String>) {
-    val s = "sss"
+/**
+ * 重写String的substring，做了一些判断。
+ * 正数从字符串头开始计算
+ * 负数从字符串末尾开始计算
+ */
+fun String.substring(start: Int, end: Int): String {
+    if (this.isEmpty()) {
+        return this
+    }
 
+    var fromIndex = start
+    var endIndex = end
+    if (fromIndex < 0) {
+        fromIndex = length.plus(fromIndex)
+        if (fromIndex < 0) {
+            fromIndex = 0
+        }
+    } else if (fromIndex > length) {
+        fromIndex = length
+    }
+
+    if (endIndex < 0) {
+        endIndex = length.plus(endIndex)
+        if (endIndex < 0) {
+            endIndex = length
+        }
+    } else if (endIndex > length) {
+        endIndex = length
+    }
+
+    if (endIndex < fromIndex) {
+        val tmp = fromIndex
+        fromIndex = endIndex
+        endIndex = tmp
+    }
+
+    if (fromIndex == endIndex) {
+        return ""
+    }
+    return (this as java.lang.String).substring(fromIndex, endIndex)
+}
+
+
+fun main(args: Array<String>) {
+    val s = "sssaaaaa{},{},{}"
+    val builder = StrBuilder.create()
+    builder.append("test")
+    println(builder.toString())
+    builder.reset()
+    builder.append("t")
+    println(builder.toString())
 }
