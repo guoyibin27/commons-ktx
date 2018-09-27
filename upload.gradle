@@ -3,22 +3,14 @@ uploadArchives {
     repositories {
         mavenDeployer {
 
-            //local maven repository
-//            repository(url: "http://192.168.1.94:8014/repository/components-snapshot/") {
-//                authentication(userName: "admin", password: "admin123")
-//            }
-
             //product maven repository
+
             repository(url: "http://maven.botong.tech/repository/components-snapshot/") {
                 authentication(userName: "admin", password: "admin123")
             }
-//            repository(url: "http://180.104.112.249:8081/repository/components-snapshot/") {
-//                authentication(userName: "admin", password: "admin123")
-//            }
             pom.version = "$project.version"
             pom.artifactId = "$project.artifactId"
             pom.groupId = "$project.group"
-
         }
     }
 }
