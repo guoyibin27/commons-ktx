@@ -336,6 +336,7 @@ fun String.substring(start: Int, end: Int): String {
     if (fromIndex == endIndex) {
         return ""
     }
+
     return (this as java.lang.String).substring(fromIndex, endIndex)
 }
 
