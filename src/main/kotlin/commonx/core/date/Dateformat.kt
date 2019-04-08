@@ -607,6 +607,42 @@ fun String.calculateAge(date: String): Int {
     return this.toDateIf()?.calculateAge(date.toDateIf() ?: Date()) ?: 0
 }
 
+/**
+ * 获取某季度的开始时间
+ */
+fun String.beginOfQuarter(): Date {
+    return this.toInt().beginOfQuarter()
+}
+
+/**
+ * 获取某季度的结束时间
+ */
+fun String.endOfQuarter(): Date {
+    return this.toInt().endOfQuarter()
+}
+
+/**
+ * 获取某季度的开始时间
+ */
+fun Int.beginOfQuarter(): Date {
+    val cal = Calendar.getInstance()
+    cal.firstDayOfWeek = Calendar.MONDAY
+    cal.set(Calendar.MONTH, this.toInt() * 3 - 3)
+    cal.set(Calendar.DAY_OF_MONTH, 1)
+    return cal.time.beginTimeOfDay()
+}
+
+/**
+ * 获取某季度的结束时间
+ */
+fun Int.endOfQuarter(): Date {
+    val cal = Calendar.getInstance()
+    cal.firstDayOfWeek = Calendar.MONDAY
+    cal.set(Calendar.MONTH, this.toInt() * 3 - 1)
+    cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH))
+    return cal.time.beginTimeOfDay()
+}
+
 
 fun main(args: Array<String>) {
 //    val date = "1039-11-11"

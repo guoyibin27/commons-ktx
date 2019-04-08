@@ -43,7 +43,6 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-    compile "net.sf.dozer:dozer:$dozer_version"
     compile "com.alibaba:fastjson:$fastjson_version"
 
     compile 'cn.hutool:hutool-all:4.1.0'

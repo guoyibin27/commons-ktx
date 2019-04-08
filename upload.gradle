@@ -5,7 +5,7 @@ uploadArchives {
 
             //product maven repository
 
-            repository(url: "http://maven.botong.tech/repository/components-snapshot/") {
+            repository(url: "http://192.168.1.94:8014/repository/components-snapshot/") {
                 authentication(userName: "admin", password: "admin123")
             }
             pom.version = "$project.version"

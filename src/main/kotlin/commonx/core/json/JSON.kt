@@ -103,17 +103,28 @@ fun Any.containsJsonPath(path: String): Boolean {
 
 
 fun main(args: Array<String>) {
-    val test = Test("test1", 20)
+//    val test = Test("test1", 20)
+    val list = mutableListOf<Test>()
+    for (i in 1..10) {
+        val test = Test("test1", i)
+        list.add(test)
+    }
 
-    val list = mutableListOf<Test>(Test("test1", 20), Test("test2", 21), Test("test3", 22), Test("test4", 23))
-    println(list.toJSONString())
-    val aa = list.toJSONString().toJSONObject<MutableList<Test>>()
-    val str = "[{\"age\":20,\"name\":\"test1\"},{\"age\":21,\"name\":\"test2\"},{\"age\":22,\"name\":\"test3\"},{\"age\":23,\"name\":\"test4\"}]"
-    val a = str.toJSONObject<MutableList<Test>>()
-    val testjson = test.toJSONString()
-    println(testjson)
-    val te = testjson.toJSONObject<Test>()
-    println(te)
+    val nameList = list.map { it.age }
+    for (i in nameList) {
+        println(i)
+    }
+
+//
+//    val list = mutableListOf<Test>(Test("test1", 20), Test("test2", 21), Test("test3", 22), Test("test4", 23))
+//    println(list.toJSONString())
+//    val aa = list.toJSONString().toJSONObject<MutableList<Test>>()
+//    val str = "[{\"age\":20,\"name\":\"test1\"},{\"age\":21,\"name\":\"test2\"},{\"age\":22,\"name\":\"test3\"},{\"age\":23,\"name\":\"test4\"}]"
+//    val a = str.toJSONObject<MutableList<Test>>()
+//    val testjson = test.toJSONString()
+//    println(testjson)
+//    val te = testjson.toJSONObject<Test>()
+//    println(te)
 }
 
 class Test(var name: String? = null, var age: Int = 0)
