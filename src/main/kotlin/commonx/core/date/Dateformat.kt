@@ -610,20 +610,6 @@ fun String.calculateAge(date: String): Int {
 /**
  * 获取某季度的开始时间
  */
-fun String.beginOfQuarter(): Date {
-    return this.toInt().beginOfQuarter()
-}
-
-/**
- * 获取某季度的结束时间
- */
-fun String.endOfQuarter(): Date {
-    return this.toInt().endOfQuarter()
-}
-
-/**
- * 获取某季度的开始时间
- */
 fun Int.beginOfQuarter(): Date {
     val cal = Calendar.getInstance()
     cal.firstDayOfWeek = Calendar.MONDAY
@@ -640,18 +626,63 @@ fun Int.endOfQuarter(): Date {
     cal.firstDayOfWeek = Calendar.MONDAY
     cal.set(Calendar.MONTH, this.toInt() * 3 - 1)
     cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH))
-    return cal.time.beginTimeOfDay()
+    return cal.time.endTimeOfDay()
+}
+
+/**
+ * 获取某个时间所在的季度的第一天
+ */
+fun Long.beginOfQuarter(): Date {
+    return this.quarter().beginOfQuarter()
+}
+
+/**
+ * 获取某个时间所在的季度的最后一天
+ */
+fun Long.endOfQuarter(): Date {
+    return this.quarter().endOfQuarter()
+}
+
+/**
+ * 获取某个时间所在的季度的第一天
+ */
+fun Date.beginOfQuarter(): Date {
+    return this.quarter().beginOfQuarter()
+}
+
+/**
+ * 获取某个时间所在的季度的最后一天
+ */
+fun Date.endOfQuarter(): Date {
+    return this.quarter().endOfQuarter()
 }
 
 
-fun main(args: Array<String>) {
-//    val date = "1039-11-11"
-//    println(date.toDateIf()!!.calculateAge())
-//    println(date.calculateAge())
-//    println(date.calculateAge("1900-01-01"))
-//    println(date.calculateAge("1900-01-01".toDateIf()!!))
-//    println(date.)
-    val t = "1988-01-01"
-    println(t.isBirthday())
-
+/**
+ * 获取某个时间所在的季度的第一天
+ * @param str 日期格式字符串
+ */
+fun String.beginOfQuarter(): Date? {
+    return this.toDateIf()?.beginOfQuarter()
 }
+
+/**
+ * 获取某个时间所在的季度的最后一天
+ * @param str 日期格式字符串
+ */
+fun String.endOfQuarter(): Date? {
+    return this.toDateIf()?.beginOfQuarter()
+}
+
+
+//fun main(args: Array<String>) {
+////    val date = "1039-11-11"
+////    println(date.toDateIf()!!.calculateAge())
+////    println(date.calculateAge())
+////    println(date.calculateAge("1900-01-01"))
+////    println(date.calculateAge("1900-01-01".toDateIf()!!))
+////    println(date.)
+//    val t = "1988-01-01"
+//    println(t.isBirthday())
+//
+//}
