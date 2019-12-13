@@ -1,9 +1,5 @@
 package commonx.core.content
 
-import cn.hutool.core.util.ArrayUtil
-import org.apache.commons.lang3.ArrayUtils
-import java.util.*
-
 
 /**
  * @version 1.0.0
@@ -25,4 +21,15 @@ inline fun <reified E> arrayOfType(size: Int = 20): Array<E> {
  */
 fun Array<*>.getComponentType(): Class<*> {
     return this.javaClass.componentType
+}
+
+
+/**
+ * 如果给定数组为空，则返回默认数组。否则返回当前数组
+ */
+fun <T> Array<T>?.defaultIfEmpty(default: Array<T>): Array<T> {
+    if (this == null || this.isEmpty()) {
+        return default
+    }
+    return this
 }

@@ -339,14 +339,3 @@ fun String.substring(start: Int, end: Int): String {
 
     return (this as java.lang.String).substring(fromIndex, endIndex)
 }
-
-
-fun main(args: Array<String>) {
-    val s = "sssaaaaa{},{},{}"
-    val builder = StrBuilder.create()
-    builder.append("test")
-    println(builder.toString())
-    builder.reset()
-    builder.append("t")
-    println(builder.toString())
-}
